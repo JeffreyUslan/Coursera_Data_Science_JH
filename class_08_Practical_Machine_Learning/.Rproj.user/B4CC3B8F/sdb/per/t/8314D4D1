@@ -1,0 +1,16 @@
+{
+    "contents" : "library(AppliedPredictiveModeling)\nlibrary(caret)\nlibrary(Hmisc)\n\n#q1\ndata(AlzheimerDisease)\nadData = data.frame(diagnosis,predictors)\ntestIndex = createDataPartition(diagnosis, p = 0.50,list=FALSE)\ntraining = adData[-testIndex,]\ntesting = adData[testIndex,]\n\n\n#q2\ndata(concrete)\nset.seed(975)\n\ninTrain = createDataPartition(mixtures$CompressiveStrength, p = 3/4)[[1]]\ntraining = mixtures[ inTrain,]\ntesting = mixtures[-inTrain,]\n\n\nsplitOn <- cut2(training$Age, g = 4)\n\nsplitOn <- mapvalues(splitOn, \n                     from = levels(factor(splitOn)), \n                     to = c(\"red\", \"blue\", \"yellow\", \"green\"))\n\n\n# automatically includes index of samples\nplot(training$CompressiveStrength, col = splitOn)\n\n# Answer: There is a step-like pattern in the plot of outcome versus index in \n# the training set that isn't explained by any of the predictor variables so \n# there may be a variable missing.\n\n\n#q3\ninTrain = createDataPartition(mixtures$CompressiveStrength, p = 3/4)[[1]]\ntraining = mixtures[ inTrain,]\ntesting = mixtures[-inTrain,]\n\nggplot(data = training) + geom_histogram(aes(x = Superplasticizer))+theme_bw()\nggplot(data = training) + geom_histogram(aes(x = log(Superplasticizer+1)))+theme_bw()\n\n\n\n#q4\nset.seed(3433)\ndata(AlzheimerDisease)\nadData = data.frame(diagnosis,predictors)\ninTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]\ntraining = adData[ inTrain,]\ntesting = adData[-inTrain,]\n\nIL_variables <- grep(\"^IL\", names(training), value = TRUE)\npreProc <- preProcess(training[, IL_variables], method = \"pca\", thresh = 0.9)\npreProc\n\n\n\n\n\n#q5\nset.seed(3433)\ndata(AlzheimerDisease)\nadData = data.frame(diagnosis,predictors)\ninTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]\ntraining = adData[ inTrain,]\ntesting = adData[-inTrain,]\n\n\n\n## grep the predictors starting with 'IL'\nIL_str <- grep(\"^IL\", colnames(training))\ntraining=training[,c(1,IL_str)]\ntesting=testing[,c(1,IL_str)]\n\n\n## train the data using the first method\nmodelFit <- train(diagnosis ~ ., method = \"glm\", data = training)\n\n\npredictions <- predict(modelFit, newdata = testing)\n\n## get the confusion matrix for the first method\nC1 <- confusionMatrix(predictions, testing$diagnosis)\nprint(C1$overall[1])\n\n\n## do similar steps with PCA\n\n# preObj=preProcess(training[,-1],method=c(\"pca\"),preProcOptions=list(thresh=.8))\n# trainPC=predict(preObj,training[,-1])\n# modelFit_pca <- train(training$diagnosis ~ ., method = \"glm\", data = trainPC)\n\nmodelFit_pca <- train(training$diagnosis ~ ., method = \"glm\", data = training,\n                  preProcess = \"pca\", \n                  trControl=trainControl(preProcOptions=list(thresh=0.8)))\n\nC2 <- confusionMatrix(testing$diagnosis, predict(modelFit_pca, testing))\nprint(C2$overall[1])\n\n",
+    "created" : 1432751262448.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4109927157",
+    "id" : "8314D4D1",
+    "lastKnownWriteTime" : 1431930830,
+    "path" : "~/Coursera_Data_Science_JH/class_08_Practical_Machine_Learning/Quiz_2.R",
+    "project_path" : "Quiz_2.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

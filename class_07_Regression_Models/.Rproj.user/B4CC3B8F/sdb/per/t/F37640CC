@@ -1,0 +1,17 @@
+{
+    "contents" : "#q1\nx <- c(0.18, -1.54, 0.42, 0.95)\nw <- c(2, 1, 3, 1)\n\nsum(x * w)/sum(w)\n\n\n# q2\n\nx <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)\ny <- c(1.39, 0.72, 1.55, 0.48, 1.19, -1.59, 1.23, -0.65, 1.49, 0.05)\n\n\nlm(y~x+0)\n\n\n\n# q3\ndata(mtcars)\nmtcars=mtcars\n\n\nlm(mpg~wt ,data=mtcars)\n\n\n# q4\n# Consider data with an outcome (Y) and a predictor (X). \n# The standard deviation of the predictor is one half that of the outcome. \n# The correlation between the two variables is .5. \n# What value would the slope coefficient for the regression model \n# with Y as the outcome and X as the predictor?\n\n# B_1=cor(Y,x)*(sd(Y)/sd(X))\n.5*(1/.5)\n\n# q5\n# Students were given two hard tests and scores were normalized to have empirical mean 0 and variance 1.\n# The correlation between the scores on the two tests was 0.4. \n# What would be the expected score on Quiz 2 for a student who had a normalized score of 1.5 on Quiz 1?\n\nb_1=.4*(1/1)\npred=0+1.5*b_1\npred\n\n\n\n# q6\n\nx <- c(8.58, 10.46, 9.01, 9.64, 8.86)\n\n# What is the value of the first measurement if x were normalized (to have mean 0 and variance 1)?\n(x-mean(x))/sd(x)\n\n\n# q7\n# Consider the following data set (used above as well). \n# What is the intercept for fitting the model with x as the predictor and y as the outcome?\n\nx <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)\ny <- c(1.39, 0.72, 1.55, 0.48, 1.19, -1.59, 1.23, -0.65, 1.49, 0.05)\n\nlm(y~x)\n\n\n# q8\n# You know that both the predictor and response have mean 0.\n# What can be said about the intercept when you fit a linear regression?\n\n# B_0=mean(y)-B_1*mean(x)\n\n# It must be identically 0.\n\n\n# q9\n\nx <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)\n# What value minimizes the sum of the squared distances between these points and itself?\nmean(x)\n\n\n# q10\n\n# Let the slope having fit Y as the outcome and X as the predictor be denoted as β1. \n# Let the slope from fitting X as the outcome and Y as the predictor be denoted as γ1. \n# Suppose that you divide β1 by γ1; \n# in other words consider β1/γ1. What is this ratio always equal to?\n\nβ1=cor(y,x)*(sd(y)/sd(x))\nγ1=cor(x,y)*(sd(x)/sd(y))\n\nβ1/γ1=cor(y,x)*(sd(y)/sd(x))  /  cor(x,y)*(sd(x)/sd(y))\n\nVar(Y)/Var(X)\n\n\n\n\n\n\n\n\n",
+    "created" : 1438215417356.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3435274230",
+    "id" : "F37640CC",
+    "lastKnownWriteTime" : 1438217116,
+    "path" : "~/Coursera_Data_Science_JH/class_07_Regression_Models/quiz1.R",
+    "project_path" : "quiz1.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

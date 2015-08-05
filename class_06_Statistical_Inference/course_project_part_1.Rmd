@@ -1,0 +1,71 @@
+---
+title: "Course Project Part 1"
+author: "Jeffrey Uslan"
+date: "Monday, July 20, 2015"
+output: pdf_document
+---
+```{r echo==FALSE}
+library(ggplot2)
+```
+In this project I will explroe the central limit theorem. I will do so by comparing 1000 simulations 
+of 40 random exponentials variables to the theoretical exponential distribution.
+##Setting up simulations
+
+```{r}
+set.seed(1)
+lambda=.2
+n <- 1000
+dists=NULL
+for (i in 1:n){
+  dists=cbind(dists,rexp(40,lambda)  )
+
+}
+```
+
+# 1. Show the sample mean and compare it to the theoretical mean of the distribution.
+```{r, fig.width = 3, fig.height = 3}
+means=apply(dists,2,mean)
+cum_means <- cumsum(means)/(1:n)
+
+g <- ggplot(data.frame(x = 1:n, y = cum_means), aes(x = x, y = y))
+g <- g + geom_hline(yintercept = 1/lambda) + geom_line(size = 2)
+g <- g + labs(x = "Number of obs", y = "Cumulative mean")
+g
+```
+##Theoretical mean
+```{r}
+1/lambda
+```
+##Mean of simulation
+```{r}
+mean(means)
+```
+# 2. Show how variable the sample is (via variance) and compare it  to the theoretical variance of the distribution.
+```{r, fig.width = 3, fig.height = 3}
+var=apply(dists,2,var)
+cum_var <- cumsum(var)/(1:n)
+
+
+g <- ggplot(data.frame(x = 1:n, y = cum_var), aes(x = x, y = y))
+g <- g + geom_hline(yintercept = (1/lambda)^2) + geom_line(size = 2)
+g <- g + labs(x = "Number of obs", y = "Cumulative Varaince")
+g
+```
+##Theoretical variance
+```{r}
+(1/lambda)^2
+```
+##Mean of simulation
+```{r}
+mean(cum_var)
+```
+# 3. Show that the distribution is approximately normal.
+Creating a normal distrubtion using the borrowed parameters
+```{r}
+normals=rnorm(n,mean=mean(means),sd=sd(means))
+```
+See how closely the normal ditribution lines up with the simulations
+```{r, fig.width = 3, fig.height = 3}
+ggplot(data=data.frame(x = 1:n, mean = means,normals=normals))+theme_bw()+
+  geom_density(aes(x=means),color="blue")+geom_density(aes(x=normals),color="red")
+```

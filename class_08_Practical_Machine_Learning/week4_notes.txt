@@ -1,0 +1,13 @@
+#Week 4 misc wierdness
+
+
+#kmeans clustering
+kmeans1=kmeans(training[,-species_ind],centers=3)
+training$clusters=as.factor(kmeans1$cluster)
+
+modFit=train(clusters~.,data=training[,-species_ind],method="rpart")
+
+
+#forecasting
+ts1=ts(data)
+plot(decompose(ts1))

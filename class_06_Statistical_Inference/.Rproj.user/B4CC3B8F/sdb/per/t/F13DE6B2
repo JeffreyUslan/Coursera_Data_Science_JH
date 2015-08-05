@@ -1,0 +1,17 @@
+{
+    "contents" : "# q1\nsubject <- c(1,2,3,4,5)\nbaseline <- c(140,138,150,148,135)\nweek_2 <- c(132,135,151,146,130)\nexaminations <- data.frame(subject, baseline, week_2)\nexaminations\n\n t.test(x = examinations$baseline, y = examinations$week_2, alt = \"two.sided\", paired = T)\n\n\n\n# q2\n\n\nn <- 9\nmu <- 1100\nsd <- 30\nquant = 0.975 # \nmu + c(-1, 1) * qt(quantile, df=n-1) * sd / sqrt(n)\n\n\n\n#q3\n\nn <- 4\nx <- 3\n binom.test(x=x, n=n, alt=\"greater\")\n\n# q4\nrate <- .01\nerr <- 10\ndays <- 1787\npoisson.test(err, T = days, r = rate, alt=\"less\")\n\n\n\n\n\n# q5\n\nn <- 9 \ns_1 <- 1.5\ns_2 <- 1.8\nmu_1 <- -3\nmu_2 <- 1\n\n\ns_p <- (((n - 1) * s_2^2 + (n - 1) * s_1^2)/(n + n - 2))\n pt((mu_1 - mu_2) / (s_p * (1 / n + 1 / n)^.5), df=n + n -2)\n\n\n# q6\n# No, it is in the CI\n\n\n# q7\n\nn <- 100 \nmu <- 0.01\nsd <- 0.04\np <- 0.05 \n\npower.t.test(n=n, delta=mu, sd=sd , sig.level=p, type=\"one.sample\", alt=\"one.sided\")$power\n\n\n\n# q8\n\nmu <- 0.01\nsd <- 0.04\np <- 0.05 \npow <- 0.9\n\n power.t.test(power=pow, delta=mu, sd=sd , sig.level=p, type=\"one.sample\", alt=\"one.sided\")$n\n\n\n\n\n\n",
+    "created" : 1436991680717.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "251355884",
+    "id" : "F13DE6B2",
+    "lastKnownWriteTime" : 1436995214,
+    "path" : "~/Statistical_Inference/week4_quiz.R",
+    "project_path" : "week4_quiz.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

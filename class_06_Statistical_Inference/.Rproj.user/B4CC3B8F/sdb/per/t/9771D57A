@@ -1,0 +1,17 @@
+{
+    "contents" : "---\ntitle: \"Course Project 2\"\nauthor: \"Jeffrey Uslan\"\ndate: \"Tuesday, July 21, 2015\"\noutput: pdf_document\n---\n\n```{r echo=FALSE, results=\"hide\", include=FALSE}\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(datasets)\nlibrary(reshape)\n```\n# 1. Load the ToothGrowth data and perform some basic exploratory data analyses \n\n```{r}\ndata(ToothGrowth)\ntoothGrowth=ToothGrowth\ntoothGrowth=tbl_df(toothGrowth)\ntoothGrowth$dose=as.factor(toothGrowth$dose)\n\nstr(toothGrowth)\n\nggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len,color=dose))+facet_grid(supp~.)\n```\n\n# 2. Provide a basic summary of the data.\n```{r}\nsummary(toothGrowth)\ntable(toothGrowth$supp,toothGrowth$dose)\n\ntoothGrowth %>% group_by(supp) %>% summarise(min(len),mean(len),max(len))\ntoothGrowth %>% group_by(dose) %>% summarise(min(len),mean(len),max(len))\n```\n\n\n# 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. \nGather relevant indices for comparing dose. Collecting Confidence intervals\n```{r}\nind_.5=which(toothGrowth$dose==.5)\nconf_.5=t.test(x = toothGrowth$len[ind_.5])$conf.int[1:2]\nind_1=which(toothGrowth$dose==1)\nconf_1=t.test(x = toothGrowth$len[ind_1])$conf.int[1:2]\nind_2=which(toothGrowth$dose==2)\nconf_2=t.test(x = toothGrowth$len[ind_2])$conf.int[1:2]\n```\n\nThe 95% confidence intervals for doses of .5, 1, and 2 respectively.\n\n```{r}\nconf_.5\nconf_1\nconf_2\n```\n\n\n\nGather relevant indices for comparing supp. Collecting Confidence intervals\n```{r}\nOJ_ind=which(toothGrowth$supp==\"OJ\")\noj_conf=t.test(x = toothGrowth$len[OJ_ind])$conf.int[1:2]\nvc_conf=t.test(x = toothGrowth$len[-OJ_ind])$conf.int[1:2]\n```\n\nThe 95% confidence intervals for supp of OF and VC respectively.\n```{r}\noj_conf\nvc_conf\n\n```\n\nA t-test to compare the means of the lengths by supp.\n```{r}\nOJ_ind=which(toothGrowth$supp==\"OJ\")\n t.test(x = toothGrowth$len[OJ_ind], y = toothGrowth$len[-OJ_ind], alt = \"two.sided\", paired = FALSE)\n```\nThe low p-value suggest that we have statistical significant evidence to reject the null hypothesis that the true difference in means is equal to 0 and accept the alternative hypothesis that the true difference is not 0.\n",
+    "created" : 1437498627269.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1889509183",
+    "id" : "9771D57A",
+    "lastKnownWriteTime" : 1437502396,
+    "path" : "~/Statistical_Inference/course_project_part_2.Rmd",
+    "project_path" : "course_project_part_2.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_markdown"
+}

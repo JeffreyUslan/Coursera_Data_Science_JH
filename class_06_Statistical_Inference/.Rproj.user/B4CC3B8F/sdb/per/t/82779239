@@ -1,0 +1,17 @@
+{
+    "contents" : "# q1\n\n# Consider influenza epidemics for two parent heterosexual families. \n# Suppose that the probability is 17% that at least one of the parents has contracted the disease.\n# The probability that the father has contracted influenza is 12%\n# while the probability that both the mother and father have contracted the disease is 6%. \n# What is the probability that the mother has contracted influenza?\np_one_parent_or_more=.17\np_father=.12\np_both=.06\np_mother=p_both-p_father+p_one_parent_or_more\np_mother\n\n\n#q2\n\n# A random variable, X is uniform, a box from 0 to 1 of height 1. \n# (So that its density is f(x)=1 for 0≤x≤1.) What is its 75th percentile? \nqunif(.75,0,1)\n\n#q3\n\n# You are playing a game with a friend where you flip a coin and if it comes up heads \n# you give her X dollars and if it comes up tails she gives you Y dollars. \n# The probability that the coin is heads is p (some number between 0 and 1.) \n# What has to be true about X and Y to make so that both of your expected total earnings is 0. \n# The game would then be called “fair”. \np*X=(1-p)*Y\n\n\n#q4\n# A density that looks like a normal density (but may or may not be exactly normal) \n# is exactly symmetric about zero. (Symmetric means if you flip it around zero it looks the same.)\n# What is its median? \n\n# The median must be 0.\n\n\n# q5\n# Consider the following PMF shown below in R\nx <- 1:4\np <- x/sum(x)\ntemp <- rbind(x, p)\nrownames(temp) <- c(\"X\", \"Prob\")\ntemp\nsum(x*p)\n\n\n\n#q6\n\n# A web site (www.medicine.ox.ac.uk/bandolier/band64/b64-7.html) for home pregnancy tests \n# cites the following: “When the subjects using the test were women who collected and\n# tested their own samples, the overall sensitivity was 75%. Specificity was also low,\n# in the range 52% to 75%.” Assume the lower value for the specificity. \n# Suppose a subject has a positive test and that 30% of women taking pregnancy tests\n# are actually pregnant. What number is closest to the probability of pregnancy given \n# the positive test?\nspec=.75\nsens=.52\ntrue_positive=.3\np_given_positive=spec*true_positive/(spec*true_positive+sens*(1-true_positive))\np_given_positive\n\n\n\n\n\n\n\n\n \n\n\n",
+    "created" : 1434994077498.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1726232201",
+    "id" : "82779239",
+    "lastKnownWriteTime" : 1434995716,
+    "path" : "~/Statistical_Inference/week1_quiz.R",
+    "project_path" : "week1_quiz.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "#downloading files\nfileUrl <- \"https://data.baltimorecity.gov/api/views/dz54-2aru/rows.csv?accessType=DOWNLOAD\"\ndownload.file(fileUrl, destfile = \"./data/cameras.csv\")\nlist.files(\"./data\")\n\n#reading local files\ncameras=read.table(\"./data/cameras.csv\",sep=\",\",header=TRUE)\n\n#reading excel files\nfileUrl <- \"https://data.baltimorecity.gov/api/views/dz54-2aru/rows.xlsx?accessType=DOWNLOAD\"\ndownload.file(fileUrl,destfile=\"./data/cameras.xlsx\",mode=\"wb\")\n\nlibrary(xlsx)\ncameraData <- read.xlsx(\"./data/cameras.xlsx\",sheetIndex=1,header=TRUE)\nhead(cameraData)\n\n\n#Reading xml files\nlibrary(XML)\nfileUrl <- \"http://www.w3schools.com/xml/simple.xml\"\ndoc <- xmlTreeParse(fileUrl,useInternal=TRUE)\nrootNode <- xmlRoot(doc)\nxmlName(rootNode)\nnames(rootNode)\nxmlSApply(rootNode,xmlValue)\nxpathSApply(rootNode,\"//name\",xmlValue)\nxpathSApply(rootNode,\"//price\",xmlValue)\n\n#reading html files\nfileUrl <- \"http://espn.go.com/nfl/team/_/name/bal/baltimore-ravens\"\ndoc <- htmlTreeParse(fileUrl,useInternal=TRUE)\nscores <- xpathSApply(doc,\"//li[@class='score']\",xmlValue)\nteams <- xpathSApply(doc,\"//li[@class='team-name']\",xmlValue)\nscores\nteams\n\n#Reading JSON files\nlibrary(jsonlite)\njsonData <- fromJSON(\"https://api.github.com/users/JeffreyUslan/repos\")\nnames(jsonData)\n\nnames(jsonData$owner)\njsonData$owner$login\n\n#convert to and from JSON format\nmyjson <- toJSON(iris, pretty=TRUE)\ncat(myjson)\n\niris2 <- fromJSON(myjson)\nhead(iris2)\n\n\n\n\n",
+    "created" : 1433184036598.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2193325030",
+    "id" : "3EF7F8FF",
+    "lastKnownWriteTime" : 1433205309,
+    "path" : "~/Getting_And_Cleaning_Data/week1_notes.R",
+    "project_path" : "week1_notes.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

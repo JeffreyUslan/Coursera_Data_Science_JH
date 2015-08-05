@@ -1,0 +1,17 @@
+{
+    "contents" : "library(httr)\n\nmyapp = oauth_app(\"twitter\",\n                  key=\"1YTM43k7Ti6cf5b4oP7Yq3lSY \",secret=\"FuivKymjbXtj0L7eXqzdIlMFZWM32VjeRhevPZFSIgKr0TirqR\")\nsig = sign_oauth1.0(myapp,\n                    token = \"3240115562-j6SCKEF8rFe8yFHGmQ837q6k72XSREDeDQIVOW5\",\n                    token_secret = \"PdDbF4xyQm1oDuYVqssaJhS6ZE2L3CLDewE0E4GTH654w\")\n\nhomeTL = GET(\"https://api.twitter.com/1.1/statuses/home_timeline.json\", sig)\nlibrary(jsonlite)\njson1 = content(homeTL)\njson2 = jsonlite::fromJSON(toJSON(json1))\njson2[1,1:4]\n\n\n\njsonData <- fromJSON(\"https://api.github.com/users/JeffreyUslan/repos\")\n\n\"5545766559722133\"\njobkeys=\"data,scientist\"\nv=2\nGET(\"https://indeed-indeed.p.mashape.com/apigetjobs\",config())",
+    "created" : 1434397160740.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3879513055",
+    "id" : "D01A1146",
+    "lastKnownWriteTime" : 1433205309,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

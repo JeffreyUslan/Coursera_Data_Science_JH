@@ -1,0 +1,78 @@
+---
+title: "Course Project 2"
+author: "Jeffrey Uslan"
+date: "Tuesday, July 21, 2015"
+output: pdf_document
+---
+
+```{r echo=FALSE, results="hide", include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(datasets)
+library(reshape)
+```
+# 1. Load the ToothGrowth data and perform some basic exploratory data analyses 
+
+```{r}
+data(ToothGrowth)
+toothGrowth=ToothGrowth
+toothGrowth=tbl_df(toothGrowth)
+toothGrowth$dose=as.factor(toothGrowth$dose)
+
+str(toothGrowth)
+
+ggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len,color=dose))+facet_grid(supp~.)
+```
+
+# 2. Provide a basic summary of the data.
+```{r}
+summary(toothGrowth)
+table(toothGrowth$supp,toothGrowth$dose)
+
+toothGrowth %>% group_by(supp) %>% summarise(min(len),mean(len),max(len))
+toothGrowth %>% group_by(dose) %>% summarise(min(len),mean(len),max(len))
+```
+
+
+# 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. 
+Gather relevant indices for comparing dose. Collecting Confidence intervals
+```{r}
+ind_.5=which(toothGrowth$dose==.5)
+conf_.5=t.test(x = toothGrowth$len[ind_.5])$conf.int[1:2]
+ind_1=which(toothGrowth$dose==1)
+conf_1=t.test(x = toothGrowth$len[ind_1])$conf.int[1:2]
+ind_2=which(toothGrowth$dose==2)
+conf_2=t.test(x = toothGrowth$len[ind_2])$conf.int[1:2]
+```
+
+The 95% confidence intervals for doses of .5, 1, and 2 respectively.
+
+```{r}
+conf_.5
+conf_1
+conf_2
+```
+
+
+
+Gather relevant indices for comparing supp. Collecting Confidence intervals
+```{r}
+OJ_ind=which(toothGrowth$supp=="OJ")
+oj_conf=t.test(x = toothGrowth$len[OJ_ind])$conf.int[1:2]
+vc_conf=t.test(x = toothGrowth$len[-OJ_ind])$conf.int[1:2]
+```
+
+The 95% confidence intervals for supp of OF and VC respectively.
+```{r}
+oj_conf
+vc_conf
+
+```
+
+A t-test to compare the means of the lengths by supp.
+```{r}
+OJ_ind=which(toothGrowth$supp=="OJ")
+ t.test(x = toothGrowth$len[OJ_ind], y = toothGrowth$len[-OJ_ind], alt = "two.sided", paired = FALSE)
+```
+The low p-value suggest that we have statistical significant evidence to reject the null hypothesis that the true difference in means is equal to 0 and accept the alternative hypothesis that the true difference is not 0.

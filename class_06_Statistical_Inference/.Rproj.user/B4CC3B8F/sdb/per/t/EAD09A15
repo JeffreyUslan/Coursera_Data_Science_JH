@@ -1,0 +1,17 @@
+{
+    "contents" : "---\ntitle: \"Course Project Part 1\"\nauthor: \"Jeffrey Uslan\"\ndate: \"Monday, July 20, 2015\"\noutput: pdf_document\n---\n```{r echo==FALSE}\nlibrary(ggplot2)\n```\nIn this project I will explroe the central limit theorem. I will do so by comparing 1000 simulations \nof 40 random exponentials variables to the theoretical exponential distribution.\n##Setting up simulations\n\n```{r}\nset.seed(1)\nlambda=.2\nn <- 1000\ndists=NULL\nfor (i in 1:n){\n  dists=cbind(dists,rexp(40,lambda)  )\n\n}\n```\n\n# 1. Show the sample mean and compare it to the theoretical mean of the distribution.\n```{r, fig.width = 3, fig.height = 3}\nmeans=apply(dists,2,mean)\ncum_means <- cumsum(means)/(1:n)\n\ng <- ggplot(data.frame(x = 1:n, y = cum_means), aes(x = x, y = y))\ng <- g + geom_hline(yintercept = 1/lambda) + geom_line(size = 2)\ng <- g + labs(x = \"Number of obs\", y = \"Cumulative mean\")\ng\n```\n##Theoretical mean\n```{r}\n1/lambda\n```\n##Mean of simulation\n```{r}\nmean(means)\n```\n# 2. Show how variable the sample is (via variance) and compare it  to the theoretical variance of the distribution.\n```{r, fig.width = 3, fig.height = 3}\nvar=apply(dists,2,var)\ncum_var <- cumsum(var)/(1:n)\n\n\ng <- ggplot(data.frame(x = 1:n, y = cum_var), aes(x = x, y = y))\ng <- g + geom_hline(yintercept = (1/lambda)^2) + geom_line(size = 2)\ng <- g + labs(x = \"Number of obs\", y = \"Cumulative Varaince\")\ng\n```\n##Theoretical variance\n```{r}\n(1/lambda)^2\n```\n##Mean of simulation\n```{r}\nmean(cum_var)\n```\n# 3. Show that the distribution is approximately normal.\nCreating a normal distrubtion using the borrowed parameters\n```{r}\nnormals=rnorm(n,mean=mean(means),sd=sd(means))\n```\nSee how closely the normal ditribution lines up with the simulations\n```{r, fig.width = 3, fig.height = 3}\nggplot(data=data.frame(x = 1:n, mean = means,normals=normals))+theme_bw()+\n  geom_density(aes(x=means),color=\"blue\")+geom_density(aes(x=normals),color=\"red\")\n```\n",
+    "created" : 1437439033886.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1723982634",
+    "id" : "EAD09A15",
+    "lastKnownWriteTime" : 1437498803,
+    "path" : "~/Statistical_Inference/course_project_part_1.Rmd",
+    "project_path" : "course_project_part_1.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_markdown"
+}

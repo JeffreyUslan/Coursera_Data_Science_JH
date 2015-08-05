@@ -1,0 +1,16 @@
+{
+    "contents" : "library(zoo)\nlibrary(AppliedPredictiveModeling)\nlibrary(caret)\nlibrary(Hmisc)\nlibrary(Rcpp)\nlibrary(ggplot2)\nlibrary(rpart)\nlibrary(randomForest)\ndata=read.csv(\"./pml-training.csv\")\ndata=data[,-1]\nfinal_test=read.csv(\"./pml-testing.csv\")\nfinal_test=final_test[,-1]\n\n#identify variables in the testing set with only missing values\nNA_cols=apply(final_test,2,function(x){sum(is.na(x))==length(x)})\nNA_vars=names(final_test)[NA_cols]\n\n#remove those from both datasets\ndata=data[,!(names(data) %in% NA_vars)]\n\n################################\n# Cleaning\n#################################\nn_nums=sapply(data,is.numeric)\ndata[,n_nums]=na.approx(data[,n_nums])\n\n\n#drop low variance variables\nNZV=nearZeroVar(data, saveMetrics=TRUE)\npoor_var=which(NZV$nzv)\nrm_vars=c(which(names(data)==\"cvtd_timestamp\"),poor_var)\ndata=data[,-rm_vars]\n\nclasse_ind=which(names(data)==\"classe\")\nn_nums=which(sapply(data,is.numeric))\ndata2=na.omit(data[,c(n_nums,classe_ind)])\n\n\n\n\ninTrain = createDataPartition(y=data2$classe, p = .6)[[1]]\ntraining = data2[ inTrain,]\ntesting = data2[-inTrain,]\n\n\n# modFit <- train(classe ~ ., method = \"rpart\", data = training)\n\n# modFit <- rpart(classe ~ ., data=training, method=\"class\")\nmodFit <- randomForest(classe ~. , data=training)\n\npred=predict(modFit,newdata= training, type = \"class\")\nconfusionMatrix(training$classe, pred)\npred=predict(modFit, testing, type = \"class\")\nconfusionMatrix(testing$classe,pred)\n\n\n\n###################################\n# apply to true test set\n########################\n#first clean in the same way\n\nfinal_test=final_test[,!(names(final_test) %in% NA_vars)]\n################################\n# Cleaning\n#################################\nn_nums=sapply(final_test,is.numeric)\nfinal_test[,n_nums]=na.approx(final_test[,n_nums])\n\n\n\n#drop low variance variables\n#same variables dropped as before\nfinal_test=final_test[,-rm_vars]\n\n\nn_nums=which(sapply(final_test,is.numeric))\nfinal_test=final_test[,c(n_nums)]\n\n\npred=predict(modFit,newdata= final_test, type = \"class\")\n\npml_write_files = function(x){\n  n = length(x)\n  for(i in 1:n){\n    filename = paste0(\"problem_id_\",i,\".txt\")\n    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)\n  }\n}\n\npml_write_files(pred)\n\n\n",
+    "created" : 1435606957990.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3721919047",
+    "id" : "14F7F316",
+    "lastKnownWriteTime" : 1432238073,
+    "path" : "~/Coursera_Data_Science_JH/class_08_Practical_Machine_Learning/course_project.R",
+    "project_path" : "course_project.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

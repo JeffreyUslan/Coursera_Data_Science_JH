@@ -1,0 +1,17 @@
+{
+    "contents" : "library(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(datasets)\nlibrary(reshape)\n\ndata(ToothGrowth)\ntoothGrowth=ToothGrowth\ntoothGrowth=tbl_df(toothGrowth)\ntoothGrowth$dose=as.factor(toothGrowth$dose)\n\n# 1. Load the ToothGrowth data and perform some basic exploratory data analyses \nstr(toothGrowth)\n\nggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len))\nggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len,color=supp))\nggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len,color=supp))+facet_grid(dose~.)\nggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len,color=dose))\nggplot(data=toothGrowth)+theme_bw()+geom_density(aes(x=len,color=dose))+facet_grid(supp~.)\n\n# 2. Provide a basic summary of the data.\nsummary(toothGrowth)\ntable(toothGrowth$supp,toothGrowth$dose)\n\ntoothGrowth %>% group_by(supp) %>% summarise(min(len),mean(len),max(len))\ntoothGrowth %>% group_by(dose) %>% summarise(min(len),mean(len),max(len))\n\n\n\n# 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. \n# (Only use the techniques from class, even if there's other approaches worth considering)\n\nind_.5=which(toothGrowth$dose==.5)\nconf_.5=t.test(x = toothGrowth$len[ind_.5])$conf.int[1:2]\nconf_.5\nind_1=which(toothGrowth$dose==1)\nconf_1=t.test(x = toothGrowth$len[ind_1])$conf.int[1:2]\nconf_1\nind_2=which(toothGrowth$dose==2)\nconf_2=t.test(x = toothGrowth$len[ind_2])$conf.int[1:2]\nconf_2\n\n\n\nOJ_ind=which(toothGrowth$supp==\"OJ\")\noj_conf=t.test(x = toothGrowth$len[OJ_ind])$conf.int[1:2]\noj_conf\nvc_conf=t.test(x = toothGrowth$len[-OJ_ind])$conf.int[1:2]\nvc_conf\nt.test(x = toothGrowth$len[OJ_ind], y = toothGrowth$len[-OJ_ind], alt = \"two.sided\", paired = T)\n\n\n\n\n\n",
+    "created" : 1437428528552.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2001398139",
+    "id" : "5431FFA0",
+    "lastKnownWriteTime" : 1437502483,
+    "path" : "~/Statistical_Inference/course_project_2.R",
+    "project_path" : "course_project_2.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

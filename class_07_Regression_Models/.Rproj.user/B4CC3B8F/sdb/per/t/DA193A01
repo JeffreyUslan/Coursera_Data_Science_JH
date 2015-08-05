@@ -1,0 +1,17 @@
+{
+    "contents" : "data(mtcars)\nmtcars=mtcars\n ",
+    "created" : 1438707483334.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "267112910",
+    "id" : "DA193A01",
+    "lastKnownWriteTime" : 1438722736,
+    "path" : "~/Coursera_Data_Science_JH/class_07_Regression_Models/course_project.R",
+    "project_path" : "course_project.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

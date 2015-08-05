@@ -1,0 +1,17 @@
+{
+    "contents" : "#q1\nq1=read.table(\"./data/getdata-data-ss06hid.csv\",sep=\",\",header=TRUE)\nsummary(q1$VAL)\nlength(which(q1$VAL>=24))\n\n\n#q2\n#see data dictionary\n\n#q3\ndat <- read.xlsx(\"./data/getdata-data-DATA.gov_NGAP.xlsx\",\n                 sheetIndex=1,header=TRUE,\n                 startRow=18,endRow=23)[,7:15]\nsum(dat$Zip*dat$Ext,na.rm=T) \n\n#q4\nfileUrl <- \"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml\"\ndownload.file(fileUrl, destfile=\"./localFile.xml\", quiet=T)\ndoc <- xmlTreeParse(\"./localFile.xml\", useInternal=T)\nrootNode <- xmlRoot(doc)\nzips=xpathSApply(rootNode,\"//zipcode\",xmlValue)\nlength(which(zips==\"21231\"))\n\n\n#q5\nfileUrl=\"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv\"\ndownload.file(fileUrl, destfile = \"./data/q5.csv\")\n# q5=read.table(\"./data/q5.csv\",sep=\",\",header=TRUE)\nDT=fread(\"./data/q5.csv\")\nDT[,mean(pwgtp15),by=SEX]\n\n\n",
+    "created" : 1435680690794.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2945155810",
+    "id" : "E9E85BD4",
+    "lastKnownWriteTime" : 1433207135,
+    "path" : "~/Getting_And_Cleaning_Data/week1_quiz.R",
+    "project_path" : "week1_quiz.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

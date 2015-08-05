@@ -1,0 +1,17 @@
+{
+    "contents" : "# q1\n# What is the variance of the distribution of the average an IID draw of n observations\n# from a population with mean μ and variance σ2.\n\n\n# s^2/n\n\n\n#q2\n\n# Suppose that diastolic blood pressures (DBPs) for men aged 35-44 are normally distributed\n# with a mean of 80 (mm Hg) and a standard deviation of 10. About what is the probability \n# that a random 35-44 year old has a DBP less than 70?\nmu=80\nsd=10\ntarg=70\npnorm(targ,mu,sd)\n\n\n#q3\n\n# Brain volume for adult women is normally distributed with a mean of about 1,100 cc \n# for women with a standard deviation of 75 cc. What brain volume represents the 95th percentile?\nmu=1100\nsd=75\npc=.95\nqnorm(pc,mu,sd)\n\n#q4\n# Refer to the previous question. Brain volume for adult women is about 1,100 cc\n# for women with a standard deviation of 75 cc. Consider the sample mean of 100 \n# random adult women from this population. \n# What is the 95th percentile of the distribution of that sample mean?\nquan=.95\nn=100\nSE <- sd/sqrt(n)\nqnorm(quan,mu,SE)\n\n#q5\n# You flip a fair coin 5 times, about what's the probability of getting 4 or 5 heads?\n(choose(5,4)+choose(5,5))/2^5\n\n\n#q6\n# The respiratory disturbance index (RDI), a measure of sleep disturbance, \n# for a specific population has a mean of 15 (sleep events per hour) and a standard deviation of 10.\n# They are not normally distributed. \n# Give your best estimate of the probability that a sample \n# mean RDI of 100 people is between 14 and 16 events per hour?\n\nmean=15\nsd=10\nn=100\nSE=sd/sqrt(n)\n\nul=16\nll=14\npnorm(ul,mean,SE)-pnorm(ll,mean,SE)\n\n\n#q7\n\n# Consider a standard uniform density. \n# The mean for this density is .5 and the variance is 1 / 12. \n# You sample 1,000 observations from this distribution and take the sample mean, \n# what value would you expect it to be near?\nmean=.5\nsd=1/sqrt(12)\nn=1000\nSE=sd/sqrt(n)\nqnorm(.5,mean,SE)\n\n\n#q8\n# The number of people showing up at a bus stop is assumed to be \n# Poisson with a mean of 5 people per hour. \n# You watch the bus stop for 3 hours. \n# About what's the probability of viewing 10 or fewer people?\nmean=5\nt=3\nsd=sqrt(mean)\nppl=10\nppois(ppl,mean*t)\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1435010005455.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2131829009",
+    "id" : "95A733C6",
+    "lastKnownWriteTime" : 1435011404,
+    "path" : "~/Statistical_Inference/week2_quiz.R",
+    "project_path" : "week2_quiz.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,59 @@
+#numerical data!
+
+
+
+#Subsetting training and test sets
+set.seed(1225)
+data(AlzheimerDisease)
+adData = data.frame(diagnosis,predictors)
+testIndex = createDataPartition(diagnosis, p = 0.50,list=FALSE)
+training = adData[-testIndex,]
+testing = adData[testIndex,]
+
+
+
+#Actually traing
+modelFit <- train(diagnosis ~ ., method = "glm", data = training)
+
+#applying model to test set
+predictions <- predict(modelFit, newdata = testing)
+
+# Diagnose model performance
+C1 <- confusionMatrix(predictions, testing$diagnosis)
+C2 <- confusionMatrix(testing$diagnosis, predict(modelFit_pca, testing))
+
+
+
+#K folds cross validation
+folds=createFolds(y=spam$type,k=10,list=TRUE,returnTrain=TRUE)
+#Time Slices for time-serires
+folds=createTimeSlices(y=time_ind,initialWindow=20,horizon=10)
+
+#plot the predictos
+featurePlot(x=training[,c("names","name2")],y=trainging$wage,plot("paris"))
+
+#cutting by quantiles
+cutWage=cut2(trainging$wage,g=3)
+#cutting by m-keans
+groud_inds=kmeans(x, centers, iter.max = 10, nstart = 1,
+       algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
+                     "MacQueen"), trace=FALSE)
+					 
+#Precossing
+preObj=preProcess(training[,outcome_inds],method=c("center","scale"))
+preObj=preProcess(training[,outcome_inds],method=c("BoxCox"))
+preObj=preProcess(training[,outcome_inds],method=c("knnImpute"))
+preObj=preProcess(training[,outcome_inds],method=c("pca"),thresh=.9)
+
+#mid processing
+modelFit_pca <- train(training$diagnosis ~ ., method = "glm", data = training,
+                  preProcess = "pca", 
+                  trControl=trainControl(preProcOptions=list(thresh=0.8)))
+#Using the preprocess
+trainPC=predict(preObj,training[,-outcome_inds])
+
+
+
+
+
+

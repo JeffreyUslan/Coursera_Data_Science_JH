@@ -1,0 +1,17 @@
+{
+    "contents" : "#q1\n# Register an application with the Github API here https://github.com/settings/applications.\n# Access the API to get information on your instructors repositories \n# (hint: this is the url you want \"https://api.github.com/users/jtleek/repos\"). \n# Use this data to find the time that the datasharing repo was created. What time was it created? \n# This tutorial may be useful (https://github.com/hadley/httr/blob/master/demo/oauth2-github.r). \n# You may also need to run the code in the base R package and not R studio.\nlibrary(httr)\nlibrary(httpuv)\nlibrary(curl)\noauth_endpoints(\"github\")\n# 51191f604af65b0544324f3beb915e61b8eeb336\nmyapp <- oauth_app(\"github\",\n                   \"c5fe1ed743e57cb22599\",\n                   \"2e9fe3c75b6212c66ae247125c05ae2e4eeb62b9\")\ngithub_token <- oauth2.0_token(oauth_endpoints(\"github\"), myapp)\nreq <- GET(\"https://api.github.com/rate_limit\", config(token = github_token))\nstop_for_status(req)\ncontent(req)\n\nBROWSE(\"https://api.github.com/users/jtleek/repos\",authenticate(\"Access Token\",\"x-oauth-basic\",\"basic\"))\n# CTRL_F \"datasharing\"\n# \"created_at\": \"2013-11-07T13:25:07Z\"\n\n\n#q2\n# The sqldf package allows for execution of SQL commands on R data frames. \n# We will use the sqldf package to practice the queries we might \n# send with the dbSendQuery command in RMySQL. \n# Download the American Community Survey data and load it into an R object called\nlibrary(sqldf)\nacs <- read.csv(\"./data/getdata-data-ss06pid.csv\", header=T, sep=\",\")\nsqldf(\"select pwgtp1 from acs where AGEP < 50\")\n\n#q3\n# Using the same data frame you created in the previous problem, \n# what is the equivalent function to unique(acs$AGEP)\na=unique(acs$AGEP)\nb=sqldf(\"select distinct AGEP from acs\")\n\n#q4\n# How many characters are in the 10th, 20th, 30th and 100th lines of HTML from this page:   \n#   http://biostat.jhsph.edu/~jleek/contact.html \n# (Hint: the nchar() function in R may be helpful)\nhurl <- \"http://biostat.jhsph.edu/~jleek/contact.html\" \ncon <- url(hurl)\nhtmlCode <- readLines(con)\nclose(con)\nnchar(htmlCode[10])\nnchar(htmlCode[20])\nnchar(htmlCode[30])\nnchar(htmlCode[100])\n\n#q5\n# Read this data set into R and report the sum of the numbers in the fourth of the nine columns. \n# https://d396qusza40orc.cloudfront.net/getdata%2Fwksst8110.for \n# Original source of the data: http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for \ndata <- read.csv(\"./data/getdata-wksst8110.for\")\nhead(data)\ndata <- read.fwf(\"./data/getdata-wksst8110.for\",widths=c(-1,9,-5,4,4,-5,4,4,-5,4,4,-5,4,4), skip=4)\nsum(data[,4])\n\n",
+    "created" : 1433786498714.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "183679431",
+    "id" : "374D1686",
+    "lastKnownWriteTime" : 1433789749,
+    "path" : "~/Getting_And_Cleaning_Data/week2_quiz.R",
+    "project_path" : "week2_quiz.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

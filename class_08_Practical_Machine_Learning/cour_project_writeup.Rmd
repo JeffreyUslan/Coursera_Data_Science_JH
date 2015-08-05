@@ -1,0 +1,154 @@
+---
+title: "Practical Machine Learning-  Final Project"
+author: "Jeffrey Uslan"
+date: "Thursday, May 21, 2015"
+output: pdf_document
+---
+
+The Project used the following packages:
+
+```{r}
+library(zoo)
+library(AppliedPredictiveModeling)
+library(caret)
+library(Hmisc)
+library(Rcpp)
+library(ggplot2)
+library(rpart)
+library(randomForest)
+```
+
+First, let's read in our training and testing sets.
+
+```{r}
+data=read.csv("./pml-training.csv")
+
+final_test=read.csv("./pml-testing.csv")
+
+```
+
+ Remove index variables
+```{r}
+data=data[,-1]
+final_test=final_test[,-1]
+```
+
+Identify which variables are viable as covariates. The code below identifies variables which are missing in the test set.
+
+
+```{r}
+NA_cols=apply(final_test,2,function(x){sum(is.na(x))==length(x)})
+NA_vars=names(final_test)[NA_cols]
+```
+
+Remove the missing variables from the training and test sets.
+
+```{r}
+data=data[,!(names(data) %in% NA_vars)]
+final_test=final_test[,!(names(final_test) %in% NA_vars)]
+```
+
+We can use the "na.approx" command from the "zoo" package to impute numeric variables.
+
+```{r}
+n_nums=sapply(data,is.numeric)
+data[,n_nums]=na.approx(data[,n_nums])
+
+n_nums=sapply(final_test,is.numeric)
+final_test[,n_nums]=na.approx(final_test[,n_nums])
+
+```
+
+Next we identify variables in the training set with near zero variance. These variables would enough value to our predictions to justify the computation power required to process them. We also omit the timestamp variable at this time.
+
+```{r}
+NZV=nearZeroVar(data, saveMetrics=TRUE)
+poor_var=which(NZV$nzv)
+rm_vars=names(data)[c(which(names(data)=="cvtd_timestamp"),poor_var)]
+```
+
+Remove variables identified in the previous step from the training and test sets.
+
+```{r}
+data=data[,!(names(data) %in% rm_vars)]
+final_test=final_test[,!(names(final_test) %in% rm_vars)]
+
+```
+
+Keep only numeric variables and the dependent factor "classe" for the training set. Remove incomplete observations from the training set.
+
+```{r}
+classe_ind=which(names(data)=="classe")
+n_nums=which(sapply(data,is.numeric))
+data=na.omit(data[,c(n_nums,classe_ind)])
+```
+
+Keep only numeric variables for the testing set.
+```{r}
+n_nums=which(sapply(final_test,is.numeric))
+final_test=final_test[,c(n_nums)]
+```
+
+
+Split the the training set for cross validation.
+
+```{r}
+inTrain = createDataPartition(y=data$classe, p = .6)[[1]]
+training = data[ inTrain,]
+testing = data[-inTrain,]
+```
+
+Fit a random forest model on the sub-training set.
+
+```{r}
+modFit <- randomForest(classe ~. , data=training)
+# modFit<-train(classe~.,data=training,method="rf",prox=TRUE)
+print(modFit)
+```
+
+The out-of-sample error rate estimate is 0.17%
+
+Check the in-sample error rate of the model on the sub-training set
+
+```{r}
+pred=predict(modFit,newdata= training, type = "class")
+confusionMatrix(training$classe, pred)
+```
+
+Predict the out-of-sample error rate of the model on the sub-testing set
+```{r}
+pred=predict(modFit, testing, type = "class")
+confusionMatrix(testing$classe,pred)
+```
+
+According to our cross-validation the out-of-sample error rate is 0.0008%
+
+Apply the model to final test set.
+
+```{r}
+pred=predict(modFit,newdata= final_test, type = "class")
+
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+pml_write_files(pred)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

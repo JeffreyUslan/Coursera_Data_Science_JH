@@ -1,0 +1,42 @@
+#Categorical Data!
+
+
+#Trees
+modFit=train(Species~.,method="rpart",data=training)
+print(modFit$finalModel)
+
+#plot tree
+plot(modFit$finalModel,uniform=TRUE)
+text(modFit$finalModel,use.n=TRUE,all=TRUE)
+
+
+
+#bagging
+predictors=data.frame(ozone=ozone$ozone)
+treebag=bag(predictors,ozone$temperature,B=10,
+				badControl=bagControl(fit=ctreeBag$fit,
+									   predict=ctreeBag$pred,
+									   aggregate=ctreeBag$aggregate))
+									   
+									   
+#Random Forests
+#bootstrapping for trees
+modFit=train(Species~.,data=training,method="rf",prox=TRUE)
+
+
+#Boosting									   
+#combining models
+modFit=train(Species~.,data=training,method="gbm",verbose=FALSE)
+
+#Model based prediction
+#lda, naive bayes
+modlda=train(Species~.,data=training,method="lda")
+modnb=train(Species~.,data=training,method="nb")
+
+
+
+
+
+
+
+

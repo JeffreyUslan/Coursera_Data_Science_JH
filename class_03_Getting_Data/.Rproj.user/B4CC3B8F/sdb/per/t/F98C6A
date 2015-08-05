@@ -1,0 +1,16 @@
+{
+    "contents" : "---\ntitle: \"Code Book\"\nauthor: \"Jeffrey Uslan\"\ndate: \"Monday, June 15, 2015\"\noutput: html_document\n---\n\n1. Merges the training and the test sets to create one data set.\n\n```{r}\n#Reading in the features\nX_train=read.table(\"./data/UCI HAR Dataset/train/X_train.txt\")\nX_test=read.table(\"./data/UCI HAR Dataset/test/X_test.txt\")\nX=rbind(X_train,X_test)\n\n#Reading in the activiy indicators\ny_train=read.table(\"./data/UCI HAR Dataset/train/y_train.txt\")\ny_test=read.table(\"./data/UCI HAR Dataset/test/y_test.txt\")\ny=rbind(y_train,y_test)\n\n#Reading in the subject indicators\nsubject_train=read.table(\"./data/UCI HAR Dataset/train/subject_train.txt\")\nsubject_test=read.table(\"./data/UCI HAR Dataset/test/subject_test.txt\")\nsubject=rbind(subject_train,subject_test)\n\ndata=cbind(y,subject,X)\n\n```\n\n2. Extracts only the measurements on the mean and standard deviation for each measurement. \n\n```{r}\n\nfeatures=read.table(\"./data/UCI HAR Dataset/features.txt\")\n#grepping mean values\nmean_features=grep(\"mean\",features[,2])\n#grepping standard deviation values\nstd_features=grep(\"std\",features[,2])\nkeep_inds=c(mean_features,std_features)\n\ndata=data[c(1,2,keep_inds+2)]\n```\n\n\n\n\n3.  Uses descriptive activity names to name the activities in the data set\n```{r}\nactivity_labels=read.table(\"./data/UCI HAR Dataset/activity_labels.txt\")\nclass(data[,1])=\"character\"\nfor (i in 1:nrow(activity_labels)) {\n  ind=as.character(activity_labels[i,1])\n  replacement=as.character(activity_labels[i,2])\n  rep_ind=which(data[,1]==ind)\n  data[rep_ind,1]=replacement\n}\n```\n\n\n4.  Appropriately labels the data set with descriptive variable names. \n```{r}\nfeat_names=as.character(features[keep_inds[order(keep_inds)],2])\nnames(data)=c(\"Activity\",\"Subject\",feat_names)\n```\n\n\n5. From the data set in step 4, creates a second, \n independent tidy data set with the average of each variable for each activity and each subject.\n```{r}\nlibrary(dplyr)\ndata2=tbl_df(data)\ntidy_set=data2 %>% group_by(Activity,Subject) %>% summarise_each(funs(mean))\nwrite.table(tidy_set,file=\"./data/final_project.txt\",row.name=FALSE) \n```",
+    "created" : 1435682441476.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2958906326",
+    "id" : "F98C6A",
+    "lastKnownWriteTime" : 1435682444,
+    "path" : "~/Getting_And_Cleaning_Data/CodeBook.md",
+    "project_path" : "CodeBook.md",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "markdown"
+}
