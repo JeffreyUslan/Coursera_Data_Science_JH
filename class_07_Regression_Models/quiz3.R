@@ -43,7 +43,8 @@ summary(q3_fit)
 result <- anova(q1_fit, q3_fit, test="Chi")
 result
 
-# The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms may not be necessary.
+# The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, 
+# which suggests that the interaction terms may not be necessary.
 
 
 # q4
