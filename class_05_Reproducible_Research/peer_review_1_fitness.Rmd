@@ -1,0 +1,131 @@
+---
+title: "Fitness Activity Analysis"
+author: "Jeffrey Uslan"
+date: "September 14, 2015"
+output: pdf_document
+---
+
+#Exectuive Summary
+
+
+
+Load in relevant libraries and view data
+```{r message=FALSE}
+library(ggplot2)
+library(tidyr)
+library(zoo)
+library(dplyr)
+```
+
+# Loading and preprocessing the data
+```{r}
+activity<-tbl_df(read.csv(unzip("./repdata-data-activity.zip")))
+```
+
+Checking basic summary.
+```{r echo=FALSE}
+print(summary(activity))
+```
+
+# What is mean total number of steps taken per day?
+Calculating the total number of steps taken per day.
+```{r echo=FALSE}
+sum_steps <- activity %>% group_by(date) %>% summarise(daily_steps=sum(steps))
+```
+
+ Making a histogram of the total number of steps taken each day.
+```{r echo=FALSE}
+ggplot(sum_steps,aes(x=daily_steps))+geom_histogram()+theme_bw()+
+  xlab("Daily Steps")+ggtitle("Total Daily Steps")
+```
+Calculating the mean and median of the total number of steps taken per day
+
+
+```{r echo=FALSE}
+ print(sum_steps %>%   na.omit()  %>% summarise(Mean_Daily_Steps=mean(daily_steps),Median_Daily_Steps=median(daily_steps)) )
+```
+
+
+Average daily activity pattern.
+```{r warning=FALSE}
+ggplot(activity,aes(x=interval,y=steps))+geom_point()+geom_smooth(aes(group=1))+
+  xlab("Interval")+ylab("Steps")+ggtitle("Total Daily Steps")
+```
+ Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r}
+activity$interval=as.factor(activity$interval)
+mean_steps <- activity %>% na.omit() %>% group_by(interval) %>% summarise(interval_steps=mean(steps))
+print(mean_steps[which(mean_steps$interval_steps==max(mean_steps$interval_steps)),])
+```
+
+
+# Imputing missing values
+ Calculate and report the total number of missing values in the dataset 
+```{r}
+print(apply(activity,2,function(x){
+  sum(is.na(x))
+})[1])
+```
+ 
+
+ Create a new dataset that is equal to the original dataset but with the missing data filled in. This method imputes using the averagr for that step.
+```{r}
+imputed_activity<-apply(activity,1,function(x){
+  if (is.na(x[1])){
+    ind=which(x[3]==mean_steps$interval)
+    x[1]=round(mean_steps$interval_steps[ind])
+    
+  }
+  return(x)
+}
+)
+
+imputed_activity=as.data.frame(t(imputed_activity))
+imputed_activity$steps=as.numeric(as.character(imputed_activity$steps))
+```
+
+Checking the summaries of pre and post-imputed datasets as a sanity check.
+```{r}
+summary(imputed_activity$steps)
+summary(activity$steps)
+```
+ Make a histogram of the total number of steps taken each day and 
+
+```{r}
+imputed_sum_steps <- imputed_activity %>% group_by(date) %>% summarise(daily_steps=sum(steps))
+ggplot(imputed_sum_steps,aes(x=daily_steps))+geom_histogram()+theme_bw()+
+  xlab("Daily Steps")+ggtitle("Imputed Total Daily Steps")
+```
+ Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? 
+```{r echo=FALSE}
+print(imputed_sum_steps %>%   na.omit()  %>% summarise(Mean_Daily_Steps_Imputed=mean(daily_steps),Median_Daily_Steps_Imputed=median(daily_steps)) )
+print(sum_steps %>%   na.omit()  %>% summarise(Mean_Daily_Steps=mean(daily_steps),Median_Daily_Steps=median(daily_steps)) )
+
+```
+ 
+
+
+#Weekends vs Weekdays
+ Create a new factor variable in the dataset with two levels – 
+ “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+```{r}
+imputed_activity$date=as.POSIXct(activity$date)
+week_break <- function(date) {
+  day <- weekdays(date)
+  if (day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")){
+    return("Weekday")
+  }
+  else { (day %in% c("Saturday", "Sunday"))
+    return("Weekend")
+  }
+}
+imputed_activity$week_break<-sapply(imputed_activity$date,FUN=week_break)
+```
+A panel plot of the average number of steps taken, averaged across all weekday days or weekend days. 
+
+
+```{r echo=FALSE}
+imputed_sum_steps_weekday <- imputed_activity %>% group_by(date,week_break) %>% summarise(daily_steps=sum(steps))
+ggplot(imputed_activity,aes(x=interval,y=steps))+geom_point()+geom_smooth(aes(group=1))+
+  xlab("Interval")+ylab("Steps")+ggtitle("Total Daily Steps")+facet_grid(week_break~.)
+```

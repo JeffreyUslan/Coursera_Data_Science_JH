@@ -4,7 +4,7 @@ library(zoo)
 library(dplyr)
 
 # Loading and preprocessing the data
-activity<-tbl_df(read.csv(unzip("./activity.csv")))
+activity<-tbl_df(read.csv(unzip("./repdata-data-activity.zip")))
 activity
 summary(activity)
 names(activity)
