@@ -1,0 +1,211 @@
+---
+title: "Storm Damage Analysis"
+author: "Jeffrey Uslan"
+date: "September 22, 2015"
+output: html_document
+---
+
+
+#Synopsis
+
+This report will analyse the impact of types of weather events on the public. The report focuses on both economic damage and threats to human health. The data is supplied courtesy of the U.S. National Oceanic and Atmospheric Administration. 
+
+#Settings and Libraries
+```{r, warning=FALSE, message=FALSE}
+echo = TRUE
+library(ggplot2)
+library(tidyr)
+library(zoo)
+library(dplyr)
+library(stringr)
+library(gridExtra)
+```
+
+#Data Processing
+Download and import data.
+```{r }
+
+if (!exists("storm")) storm <- read.csv(bzfile("repdata-data-StormData.csv.bz2"))
+```
+
+Glimpse the Shape of the data.
+
+```{r}
+storm <- tbl_df(storm)
+storm
+```
+
+A histogram shows that data records became consistent around 1995, so we will omit earlier events from our analysis.
+
+```{r, warning=FALSE, message=FALSE}
+storm$year <- as.numeric(format(as.Date(storm$BGN_DATE, format = "%m/%d/%Y %H:%M:%S"), "%Y"))
+ggplot(data=storm)+theme_bw()+
+  geom_histogram(aes(x=year))+xlab("Year")+ylab("Frequency")+ggtitle("Histogram of Storm Year")
+
+# Limit to dense data after 1995  
+storm = storm[storm$year>=1995,]
+```
+
+
+#Public Health
+
+The recorded weather events are not consistent:
+
+```{r}
+storm$EVTYPE= as.factor(tolower(storm$EVTYPE))
+arrange(storm %>% group_by(EVTYPE) %>% summarise(Count=n()),desc(Count))
+```
+
+Rename events based on manual exploration.
+
+```{r}
+storm$simplfied_EVTYPE=as.character(storm$EVTYPE)
+
+word="fld"
+rep_ind=grep(word,storm$simplfied_EVTYPE)
+storm$simplfied_EVTYPE[rep_ind]="flood" 
+
+replacement_words=c("hail","wind","flood","snow","lightning","rain","winter","funnel cloud",
+                    "waterspout","fire","blizzard","drought","ice","heat","fog","freeze",
+                    "surf","tropical","cold","dust","avalanche","hurricane","tide",
+                    "landslide","warm","current","dry","tornado","storm")
+for (word in replacement_words) {
+  
+ rep_ind=grep(word,storm$simplfied_EVTYPE) 
+ storm$simplfied_EVTYPE[rep_ind]=word 
+
+}
+```
+
+This simplifies our categories greatly, taking us from 716 to 216
+
+
+```{r}
+Storm_Health=storm %>% group_by(simplfied_EVTYPE) %>% 
+          summarise(Fatalities=sum(FATALITIES),Injuries=sum(INJURIES),
+                    Count=n()) 
+Storm_Health %>% arrange(desc(Count))
+```
+
+#Economic Damage
+
+Adjusting damage estimates according to unit notation provided to be in millions of dollars
+
+```{r}
+storm$PROPDMG[storm$PROPDMGEXP=="B"]=(storm$PROPDMG[storm$PROPDMGEXP=="B"]*(10^9))/(10^6)
+storm$PROPDMG[storm$PROPDMGEXP=="M"]=(storm$PROPDMG[storm$PROPDMGEXP=="M"]*(10^6))/(10^6)
+storm$PROPDMG[storm$PROPDMGEXP=="K"]=(storm$PROPDMG[storm$PROPDMGEXP=="K"]*(10^3))/(10^6)
+storm$PROPDMG[storm$PROPDMGEXP=="H"]=(storm$PROPDMG[storm$PROPDMGEXP=="H"]*(10^2))/(10^6)
+
+storm$CROPDMG[storm$CROPDMGEXP=="B"]=(storm$CROPDMG[storm$CROPDMGEXP=="B"]*(10^9))/(10^6)
+storm$CROPDMG[storm$CROPDMGEXP=="M"]=(storm$CROPDMG[storm$CROPDMGEXP=="M"]*(10^6))/(10^6)
+storm$CROPDMG[storm$CROPDMGEXP=="K"]=(storm$CROPDMG[storm$CROPDMGEXP=="K"]*(10^3))/(10^6)
+storm$CROPDMG[storm$CROPDMGEXP=="H"]=(storm$CROPDMG[storm$CROPDMGEXP=="H"]*(10^2))/(10^6)
+```
+
+Producing summary table grouped by weather event type
+
+```{r}
+Storm_Economy=storm %>% group_by(simplfied_EVTYPE) %>% 
+  summarise(Property=sum(PROPDMG),Crop=sum(CROPDMG),
+            Count=n()) 
+```
+
+#Results
+
+## Public Health
+Public health damage in descending order of fatalities.
+```{r}
+Storm_Health %>% arrange(desc(Fatalities))
+```
+
+Public health damage in descending order of injuries.
+
+```{r}
+Storm_Health %>% arrange(desc(Injuries))
+```
+
+
+
+The graphs below illustrate the events posing most risk to public health.
+
+```{r}
+worst_fatalities=(Storm_Health %>% arrange(desc(Fatalities)))$simplfied_EVTYPE[1:10]
+temp_plot_data=Storm_Health %>% arrange(desc(Fatalities))
+temp_plot_data=temp_plot_data[temp_plot_data$simplfied_EVTYPE %in% worst_fatalities,] 
+fatality_plot <- ggplot(temp_plot_data) + theme_bw() +
+  geom_bar(aes(x =simplfied_EVTYPE,weight=Fatalities ))+
+  scale_y_continuous("Total of Fatalities") + 
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) + 
+  xlab("Weather Event Type") + 
+  ggtitle("Fatalities ")
+
+worst_Injuries=(Storm_Health %>% arrange(desc(Injuries)))$simplfied_EVTYPE[1:10]
+temp_plot_data=Storm_Health %>% arrange(desc(Injuries))
+temp_plot_data=temp_plot_data[temp_plot_data$simplfied_EVTYPE %in% worst_Injuries,] 
+injury_plot <-  ggplot(temp_plot_data) + theme_bw() +
+  geom_bar(aes(x =simplfied_EVTYPE,weight=Injuries ))+
+  scale_y_continuous("Total of Injuries") + 
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) + 
+  xlab("Weather Event Type") + 
+  ggtitle("Injuries")
+grid.arrange(fatality_plot, injury_plot, ncol = 2)
+```
+
+
+## Economic Damage
+
+Economic damage in descending order of property damage.
+
+```{r}
+Storm_Economy %>% arrange(desc(Property))
+```
+
+Economic damage in descending order of crop damage.
+
+```{r}
+Storm_Economy %>% arrange(desc(Crop))
+```
+
+
+The graphs below illustrate the events posing most risk to public health.
+
+```{r}
+
+
+
+ind_1=(Storm_Economy %>% arrange(desc(Property)))$simplfied_EVTYPE[1:10]
+temp_plot_data=Storm_Economy %>% arrange(desc(Property))
+temp_plot_data=temp_plot_data[temp_plot_data$simplfied_EVTYPE %in% ind_1,] 
+property_plot <- ggplot(temp_plot_data) + theme_bw() +
+  geom_bar(aes(x =simplfied_EVTYPE,weight=Property ))+
+  scale_y_continuous("Total of Property Damage in USD (10^6)") + 
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) + 
+  xlab("Weather Event Type") + 
+  ggtitle("Property Damage")
+
+ind_2=(Storm_Economy %>% arrange(desc(Crop)))$simplfied_EVTYPE[1:10]
+temp_plot_data=Storm_Economy %>% arrange(desc(Crop))
+temp_plot_data=temp_plot_data[temp_plot_data$simplfied_EVTYPE %in% ind_2,] 
+crop_plot <-  ggplot(temp_plot_data) + theme_bw() +
+  geom_bar(aes(x =simplfied_EVTYPE,weight=Crop ))+
+  scale_y_continuous("Total of Crop Damage in USD (10^6)") + 
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) + 
+  xlab("Weather Event Type") + 
+  ggtitle("Crop Damage")
+grid.arrange(property_plot, crop_plot, ncol = 2)
+
+```
+
+
+#Conclusion
+This Analysis shows that:
+
+ - Heat, Tornadoes, and Flooding, respectively, pose the greatest risk to human life.
+ 
+ - Tornadoes, Heat, and Flooding, respectively, pose the greatest risk to human injury.
+ 
+ - Flooding, Hurricanes, and Storms, respectively, inflict the greatest property damage.
+ 
+ - Drought, Hurricanes, and Heat, respectively, inflict the greatest crop damage.
+

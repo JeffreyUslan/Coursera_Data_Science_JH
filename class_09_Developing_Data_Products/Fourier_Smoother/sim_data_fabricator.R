@@ -7,7 +7,7 @@ time     <- 1
 w        <- 2*pi/time
 ts       <- seq(time/len,time,1/len)
 #simple noise
-noise=rnorm(len,mean=0,sd=.3)
+noise=rnorm(len,mean=0,sd=.5)
 #heteroscedastic noise
 #sinusoidals
 sin_1=.99*sin(1*w*ts)

@@ -1,0 +1,66 @@
+---
+title: "Fourier Smoothing"
+author: "Jeffrey Uslan"
+date: "September 21, 2015"
+output: ioslides_presentation
+---
+
+## Coursera Reproducible Pitch
+### See the Web Application here:
+- https://jeffreyuslan.shinyapps.io/Fourier_Smoother
+
+This shiny app is intended to showcase the trend finding and de-noising power of Fourier methods.
+
+Two methods are showcased here:
+
+* The first method removes high frequency modes regardless of amiplitude. 
+* The second method removes low amplitude modes regardless of frequency.
+
+The threshold cutoff slider selects the lowest percentile to be omitted.
+
+The code for this application can be found here: ow.ly/SwZrv
+
+
+## Simulated Data
+
+
+Creating  simulated time series data:
+
+```{r }
+len=1000
+x=seq(1:len)
+ts       <- seq(1/len,1,1/len)
+
+sin_1=.99*sin(1*2*pi*ts)
+sin_2=.9*sin(6*2*pi*ts)
+sin_4=.5*sin(26*2*pi*ts)
+sin_8=.8*sin(133*2*pi*ts)
+sin_16=.7*sin(400*2*pi*ts)
+noise=rnorm(len,mean=0,sd=.5)
+sim_data=sin_1+sin_2+sin_4+sin_8+sin_16+noise
+
+```
+## Simulation Plot
+```{r}
+plot(sim_data,xlab="Time",ylab="Simulated Data")
+
+```
+
+
+## Summary of Simulated data
+```{r}
+summary(sim_data)
+```
+
+## Analysis - sample code
+```{r, eval=FALSE}
+X.hold = fft(sim_data)
+cutoff=quantile(Mod(X.hold),Threshold)
+cutoff_ind=which(Mod(X.hold)<cutoff)
+
+if (length(cutoff_ind)>1) X.hold[cutoff_ind]=0
+X.hold.plottable=Mod(X.hold[0:((length(X.hold)-1)/2)])
+X.unf=fft(X.hold,inverse=TRUE)/length(sim_data)
+X.unf=as.double(X.unf)
+```
+

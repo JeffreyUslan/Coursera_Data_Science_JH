@@ -7,11 +7,12 @@
     "hash" : "2193325030",
     "id" : "3EF7F8FF",
     "lastKnownWriteTime" : 1433205309,
-    "path" : "~/Getting_And_Cleaning_Data/week1_notes.R",
+    "path" : "~/Coursera_Data_Science_JH/class_03_Getting_Data/week1_notes.R",
     "project_path" : "week1_notes.R",
     "properties" : {
         "tempName" : "Untitled1"
     },
+    "relative_order" : 0,
     "source_on_save" : false,
     "type" : "r_source"
 }

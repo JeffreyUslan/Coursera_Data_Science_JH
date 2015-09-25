@@ -9,15 +9,24 @@ library(shiny)
 
 shinyServer(function(input, output) {
   
-  output$fourier_smoother_high_freq<- renderPlot({
+  output$fourier_smoother_high_freq_plot<- renderPlot({
     Threshold=input$Threshold
-    fourier_smoother_high_freq(Threshold)
+    fourier_smoother_high_freq_plot(Threshold)
   })
   
-  output$fourier_smoother_low_amp<- renderPlot({
+  output$fourier_smoother_low_amp_plot<- renderPlot({
     Threshold=input$Threshold
-    fourier_smoother_low_amp(Threshold)
-    # plot(runif(100))
+    fourier_smoother_low_amp_plot(Threshold)
+    
   })
   
+  output$fourier_smoother_high_freq_domain_plot<- renderPlot({
+    Threshold=input$Threshold
+    fourier_smoother_high_freq_domain_plot(Threshold)
+  })
+  
+  output$fourier_smoother_low_amp_domain_plot<- renderPlot({
+    Threshold=input$Threshold
+    fourier_smoother_low_amp_domain_plot(Threshold)
+  })
 })

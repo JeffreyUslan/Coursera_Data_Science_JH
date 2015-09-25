@@ -7,11 +7,12 @@
     "hash" : "183679431",
     "id" : "374D1686",
     "lastKnownWriteTime" : 1433789749,
-    "path" : "~/Getting_And_Cleaning_Data/week2_quiz.R",
+    "path" : "~/Coursera_Data_Science_JH/class_03_Getting_Data/week2_quiz.R",
     "project_path" : "week2_quiz.R",
     "properties" : {
         "tempName" : "Untitled1"
     },
+    "relative_order" : 0,
     "source_on_save" : false,
     "type" : "r_source"
 }

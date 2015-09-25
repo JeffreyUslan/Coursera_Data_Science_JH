@@ -1,6 +1,8 @@
 name: Fourier_Smoother
 account: jeffreyuslan
 server: shinyapps.io
-bundleId: 270599
+bundleId: 271399
 url: https://jeffreyuslan.shinyapps.io/Fourier_Smoother
-when: 1442864191.96524
+when: 1442941050.44278
+asMultiple: FALSE
+asStatic: FALSE
