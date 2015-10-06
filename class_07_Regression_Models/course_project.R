@@ -49,6 +49,7 @@ anova(stepwise_model, categorical_fit, test="Chi")
 ggplot(data=mtcars)+theme_bw()+geom_density(aes(x=mpg,color=Transmission))+
   ggtitle("Fuel Efficiency by Transmission type")+xlab("Miles Per Gallon (MPG)")+ylab("Density")
 
+
 ggplot(data=mtcars)+theme_bw()+geom_point(aes(y=wt,x=mpg,color=Transmission))+
   geom_smooth(method=lm,aes(y=wt,x=mpg,color=Transmission))+
   ggtitle("Fuel Efficiency by Weight")+ylab("Miles Per Gallon (MPG)")+xlab("Weight")
